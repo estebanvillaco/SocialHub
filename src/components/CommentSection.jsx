@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const CommentSection = () => {
+const CommentSection = ({ postId }) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
 

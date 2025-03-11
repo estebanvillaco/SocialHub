@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
-const LikeButton = () => {
-  const [likes, setLikes] = useState(0);
+const LikeButton = ({ initialLikes }) => {
+  const [likes, setLikes] = useState(initialLikes);
   const [hasLiked, setHasLiked] = useState(false);
 
   const handleLike = () => {
@@ -10,11 +10,9 @@ const LikeButton = () => {
   };
 
   return (
-    <div className="like-button-container">
-      <button className="like-button" onClick={handleLike}>
-        {hasLiked ? 'Unlike' : 'Like'} ({likes})
-      </button>
-    </div>
+    <button className="like-button" onClick={handleLike}>
+      {hasLiked ? 'Unlike' : 'Like'} ({likes})
+    </button>
   );
 };
 

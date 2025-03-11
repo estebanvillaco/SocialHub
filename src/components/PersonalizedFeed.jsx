@@ -1,30 +1,49 @@
-import React from 'react';
-import { useFeed } from '../context/FeedContext';
-import Likebutton from './Likebutton';
-import CommentSection from './CommentSection';
-import ShareButton from './ShareButton';
+import React, { useState } from "react";
+import { useFeed } from "../context/FeedContext";
+import LikeButton from "./Likebutton";
+import CommentSection from "./CommentSection";
 
 const PersonalizedFeed = () => {
   const { posts } = useFeed();
+  const [showCommentSection, setShowCommentSection] = useState({});
+
+  const toggleCommentSection = (postId) => {
+    setShowCommentSection((prev) => ({
+      ...prev,
+      [postId]: !prev[postId],
+    }));
+  };
 
   return (
-    <div className="personalized-feed">
-      {posts.length > 0 ? (
-        posts.map((post) => (
-          <div key={post.id} className="post">
-            <h2>{post.topic}</h2>
-            <p>{post.content}</p>
-
-            {/* Interaction Options */}
-            <div className="interaction-section">
-              <Likebutton />
-              <CommentSection />
-              <ShareButton postUrl={`https://socialhub.com/post/${post.id}`} />
+    <div className="feed">
+      {posts.length === 0 ? (
+        <p>No posts yet</p>
+      ) : (
+        posts.map((post, index) => (
+          <div key={index} className="post-card">
+            {/* User Info */}
+            <div className="post-header">
+              <strong className="post-username">{post.user || "test"}</strong>
+              <p className="post-caption">{post.caption}</p>
             </div>
+            {/* Post Image */}
+            {post.image && <img src={post.image} alt="Post" className="post-image" />}
+
+            {/* Like & Comment Buttons */}
+            <div className="post-actions">
+              <LikeButton initialLikes={post.likes} />
+              <button
+                className="comment-button"
+                onClick={() => toggleCommentSection(post.id)}
+              >
+                💬 Comment
+              </button>
+            </div>
+
+            {/* Comment Section */}
+            {showCommentSection[post.id] && <CommentSection postId={post.id} />}
           </div>
         ))
-      ) : (
-        <p>No posts available. Create one!</p>
       )}
     </div>
   );

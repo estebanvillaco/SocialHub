@@ -1,33 +1,41 @@
-import React, { useState } from 'react';
-import { useFeed } from '../context/FeedContext';
+import React, { useState } from "react";
+import { useFeed } from "../context/FeedContext";
 
 const PostCreator = () => {
-  const [topic, setTopic] = useState('');
-  const [content, setContent] = useState('');
   const { addPost } = useFeed();
+  const [content, setContent] = useState("");
+  const [image, setImage] = useState(null);
 
-  const handlePost = () => {
-    if (topic.trim() && content.trim()) {
-      addPost({ topic, content, id: Date.now() });
-      setTopic('');
-      setContent('');
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (content.trim() || image) {
+      const newPost = {
+        id: Date.now(),
+        user: "Current User",
+        caption: content,
+        image: image ? URL.createObjectURL(image) : null,
+        likes: 0,
+        comments: [],
+      };
+      addPost(newPost);
+      setContent("");
+      setImage(null);
     }
   };
 
   return (
     <div className="post-creator">
-      <input
-        type="text"
-        placeholder="Topic"
-        value={topic}
-        onChange={(e) => setTopic(e.target.value)}
-      />
       <textarea
-        placeholder="Content"
+        placeholder="Write a caption..."
         value={content}
         onChange={(e) => setContent(e.target.value)}
       />
-      <button className="button" onClick={handlePost}>Post</button>
+      <input
+        type="file"
+        accept="image/*"
+        onChange={(e) => setImage(e.target.files[0])}
+      />
+      <button onClick={handleSubmit} className="button">Post</button>
     </div>
   );
 };
